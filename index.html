@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>In Loving Memory — Miriam Ngozi Tasker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--cream:#FAF6EF;--ivory:#F3EDE0;--gold:#B8924A;--gold-light:#D4AA6A;--deep:#2C2416;--brown:#5C4A2A;--sage:#6B7B5E;--muted:#8A7A62;--border:#DDD0B8;--white:#FFFFFF}
+html{scroll-behavior:smooth}
+body{background-color:var(--cream);color:var(--deep);font-family:'Jost',sans-serif;font-weight:300;line-height:1.7;min-height:100vh}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;overflow:hidden;background:linear-gradient(160deg,#FAF6EF 0%,#F0E8D5 60%,#E8DCC8 100%)}
+.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(ellipse 600px 400px at 80% 20%,rgba(184,146,74,0.08) 0%,transparent 70%),radial-gradient(ellipse 400px 600px at 10% 80%,rgba(107,123,94,0.07) 0%,transparent 70%);pointer-events:none}
+.botanical{position:absolute;opacity:0.12;pointer-events:none}
+.botanical-tl{top:0;left:0;width:280px}
+.botanical-br{bottom:0;right:0;width:280px;transform:rotate(180deg)}
+.divider-ornament{display:flex;align-items:center;gap:16px;margin:28px 0}
+.divider-ornament::before,.divider-ornament::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);max-width:120px}
+.divider-ornament span{color:var(--gold);font-size:18px}
+.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;animation:fadeUp 0.8s ease both}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,9vw,96px);font-weight:300;line-height:1.05;color:var(--deep);letter-spacing:-1px;animation:fadeUp 0.9s ease 0.1s both}
+.hero-name em{font-style:italic;color:var(--brown)}
+.hero-dates{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;font-style:italic;color:var(--muted);letter-spacing:2px;margin-top:12px;animation:fadeUp 1s ease 0.2s both}
+.hero-quote{max-width:540px;font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3vw,26px);font-style:italic;font-weight:300;color:var(--brown);line-height:1.5;animation:fadeUp 1.1s ease 0.3s both}
+.hero-sub{font-size:15px;font-weight:300;color:var(--muted);max-width:480px;animation:fadeUp 1.2s ease 0.4s both}
+.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--gold);font-size:11px;letter-spacing:3px;text-transform:uppercase;animation:fadeUp 1.4s ease 0.6s both}
+.scroll-arrow{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s ease-in-out infinite}
+.section{max-width:860px;margin:0 auto;padding:80px 24px}
+.section-label{font-size:11px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:400;color:var(--deep);line-height:1.1;margin-bottom:20px}
+.section-body{font-size:16px;color:var(--muted);max-width:560px;margin-bottom:48px;line-height:1.8}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:48px;overflow-x:auto}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:14px 28px;font-family:'Jost',sans-serif;font-size:13px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all 0.25s ease;margin-bottom:-1px}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-btn:hover:not(.active){color:var(--brown)}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeUp 0.4s ease}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:8px}
+.form-group.full{grid-column:1/-1}
+label{font-size:11px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--brown)}
+input,textarea,select{background:var(--white);border:1px solid var(--border);border-radius:2px;padding:14px 18px;font-family:'Jost',sans-serif;font-size:15px;font-weight:300;color:var(--deep);outline:none;transition:border-color 0.2s ease,box-shadow 0.2s ease;width:100%}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,146,74,0.08)}
+textarea{min-height:160px;resize:vertical}
+.char-count{font-size:12px;color:var(--muted);text-align:right}
+.submit-btn{display:inline-flex;align-items:center;gap:12px;background:var(--deep);color:var(--cream);border:none;padding:16px 40px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.25s ease;border-radius:1px;margin-top:12px}
+.submit-btn:hover{background:var(--gold);transform:translateY(-1px)}
+.submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+.success-msg{display:none;background:linear-gradient(135deg,#F3EDE0,#EAE1D0);border:1px solid var(--border);border-left:3px solid var(--sage);padding:24px 28px;border-radius:2px;font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--brown)}
+.photo-upload-area{background:var(--white);border:2px dashed var(--border);border-radius:4px;padding:48px;text-align:center;transition:border-color 0.2s ease;cursor:pointer}
+.photo-upload-area:hover,.photo-upload-area.dragover{border-color:var(--gold)}
+.photo-upload-area.dragover{background:var(--ivory)}
+.photo-icon{width:64px;height:64px;margin:0 auto 24px;opacity:0.4}
+.photo-upload-area h3{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:var(--deep);margin-bottom:12px}
+.photo-upload-area p{color:var(--muted);font-size:15px;max-width:400px;margin:0 auto 32px}
+.photo-link{display:inline-flex;align-items:center;gap:10px;background:var(--ivory);border:1px solid var(--border);color:var(--brown);padding:14px 32px;font-size:12px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;border-radius:1px;transition:all 0.2s ease;cursor:pointer}
+.photo-link:hover{background:var(--gold);color:var(--white);border-color:var(--gold)}
+.upload-progress{margin-top:16px;display:none}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--gold);width:0%;transition:width 0.3s ease}
+.rsvp-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:40px}
+@media(max-width:600px){.rsvp-cards{grid-template-columns:1fr}}
+.rsvp-card{background:var(--white);border:2px solid var(--border);border-radius:2px;padding:32px;cursor:pointer;transition:all 0.25s ease;position:relative}
+.rsvp-card:hover{border-color:var(--gold-light)}
+.rsvp-card.selected{border-color:var(--gold);background:linear-gradient(135deg,#FAF6EF,#F5EDD8)}
+.rsvp-card .check{position:absolute;top:16px;right:16px;width:24px;height:24px;border:2px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
+.rsvp-card.selected .check{background:var(--gold);border-color:var(--gold)}
+.rsvp-card .check::after{content:'';width:6px;height:10px;border:2px solid white;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);display:none}
+.rsvp-card.selected .check::after{display:block}
+.rsvp-card .city{font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.rsvp-card h3{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--deep);margin-bottom:8px}
+.rsvp-card .detail{font-size:14px;color:var(--muted);line-height:1.6}
+.section-divider{border:none;border-top:1px solid var(--border);margin:0}
+footer{text-align:center;padding:48px 24px 60px;background:var(--deep);color:rgba(255,255,255,0.35);font-size:12px;letter-spacing:2px;text-transform:uppercase}
+footer span{color:rgba(255,255,255,0.6)}
+.notice{background:#fff8ed;border:1px solid #f0d9a0;border-radius:2px;padding:14px 20px;font-size:13px;color:var(--brown);margin-bottom:28px;display:flex;gap:10px;align-items:flex-start}
+.messages-wall{margin-top:60px;padding-top:48px;border-top:1px solid var(--border)}
+.messages-wall h3{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:var(--deep);margin-bottom:32px;font-style:italic}
+.message-card{background:var(--white);border:1px solid var(--border);border-radius:2px;padding:28px 32px;margin-bottom:16px;position:relative}
+.message-card::before{content:'“';font-family:'Cormorant Garamond',serif;font-size:72px;color:var(--gold);opacity:0.2;position:absolute;top:8px;left:20px;line-height:1}
+.message-card p{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;font-style:italic;color:var(--brown);line-height:1.6;margin-bottom:12px;padding-left:12px}
+.message-card .author{font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.loading-msgs{text-align:center;color:var(--muted);font-style:italic;padding:24px}
+.photo-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:32px}
+.photo-gallery img{width:100%;height:180px;object-fit:cover;border-radius:2px;border:1px solid var(--border)}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scrollPulse{0%,100%{opacity:0.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.15)}}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <svg class="botanical botanical-tl" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 220 Q60 160 120 100 Q160 60 220 20" stroke="#B8924A" stroke-width="1.5" stroke-linecap="round"/>
+    <ellipse cx="80" cy="150" rx="28" ry="16" transform="rotate(-35 80 150)" stroke="#6B7B5E" stroke-width="1.2"/>
+    <ellipse cx="130" cy="100" rx="22" ry="13" transform="rotate(-55 130 100)" stroke="#6B7B5E" stroke-width="1.2"/>
+    <ellipse cx="50" cy="190" rx="18" ry="10" transform="rotate(-20 50 190)" stroke="#6B7B5E" stroke-width="1.2"/>
+    <circle cx="170" cy="60" r="5" stroke="#B8924A" stroke-width="1.2"/>
+  </svg>
+  <svg class="botanical botanical-br" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 220 Q60 160 120 100 Q160 60 220 20" stroke="#B8924A" stroke-width="1.5" stroke-linecap="round"/>
+    <ellipse cx="80" cy="150" rx="28" ry="16" transform="rotate(-35 80 150)" stroke="#6B7B5E" stroke-width="1.2"/>
+    <ellipse cx="130" cy="100" rx="22" ry="13" transform="rotate(-55 130 100)" stroke="#6B7B5E" stroke-width="1.2"/>
+    <ellipse cx="50" cy="190" rx="18" ry="10" transform="rotate(-20 50 190)" stroke="#6B7B5E" stroke-width="1.2"/>
+  </svg>
+  <p class="hero-eyebrow">In Loving Memory</p>
+  <h1 class="hero-name">Miriam <em>Ngozi</em> Tasker</h1>
+  <p class="hero-dates">May 3, 1956  —  March 4, 2026</p>
+  <div class="divider-ornament"><span>❧</span></div>
+  <p class="hero-quote">"To live in hearts we leave behind is not to die."</p>
+  <p class="hero-sub" style="margin-top:20px">We invite you to share a message, a memory, and your presence as we honor her life.</p>
+  <div class="scroll-hint"><div class="scroll-arrow"></div>Leave a message</div>
+</section>
+
+<section class="section reveal">
+  <p class="section-label">Share With Us</p>
+  <h2 class="section-title">Honor Her Memory</h2>
+  <p class="section-body">Miriam touched so many lives. Whether you knew her as a mother, a teacher, a friend, or a neighbor — your words and memories are a gift to our family.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('message',this)">Leave a Message</button>
+    <button class="tab-btn" onclick="switchTab('photo',this)">Share a Photo</button>
+    <button class="tab-btn" onclick="switchTab('rsvp',this)">RSVP to Service</button>
+  </div>
+
+  <div id="tab-message" class="tab-panel active">
+    <div class="notice"><span>✶</span><div><strong>Your message goes directly to the family.</strong> Every word will be read and cherished.</div></div>
+    <form id="messageForm">
+      <div class="form-grid">
+        <div class="form-group"><label>First Name</label><input type="text" id="firstName" placeholder="Your first name" required /></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="lastName" placeholder="Your last name" /></div>
+        <div class="form-group"><label>How Did You Know Miriam?</label>
+          <select id="relation"><option value="">Select one</option><option>Family member</option><option>Colleague / Fellow educator</option><option>Friend</option><option>Student</option><option>Neighbor</option><option>Church community</option><option>Other</option></select>
+        </div>
+        <div class="form-group"><label>Your Location <span style="opacity:0.5;font-weight:300">(optional)</span></label><input type="text" id="location" placeholder="City, State" /></div>
+        <div class="form-group full"><label>Your Message</label>
+          <textarea id="message" placeholder="Share a memory, a kind word, or simply your love…" maxlength="1000" oninput="document.getElementById('msgCount').textContent=this.value.length" required></textarea>
+          <div class="char-count"><span id="msgCount">0</span> / 1000</div>
+        </div>
+        <div class="form-group full"><label style="display:flex;align-items:center;gap:10px;cursor:pointer;text-transform:none;font-size:14px;letter-spacing:0.5px"><input type="checkbox" id="showOnPage" style="width:16px;height:16px;accent-color:var(--gold)" /> Show my message on this page for all to see</label></div>
+      </div>
+      <button type="submit" class="submit-btn" id="msgBtn">Send My Message  →</button>
+    </form>
+    <div class="success-msg" id="msgSuccess">Thank you. Your words are now with the Tasker family.</div>
+    <div class="messages-wall" id="messagesWall">
+      <h3>Messages from those who loved her</h3>
+      <div id="messagesList"><div class="loading-msgs">Loading messages…</div></div>
+    </div>
+  </div>
+
+  <div id="tab-photo" class="tab-panel">
+    <div class="notice"><span>✶</span><div><strong>Photos are stored permanently</strong> in the family's memorial archive. Max 50MB per photo.</div></div>
+    <form id="photoForm">
+      <div class="form-grid" style="margin-bottom:20px">
+        <div class="form-group"><label>Your Name</label><input type="text" id="photoName" placeholder="Your name" required /></div>
+        <div class="form-group"><label>Caption <span style="opacity:0.5;font-weight:300">(optional)</span></label><input type="text" id="photoCaption" placeholder="Who is in the photo? When was it taken?" /></div>
+      </div>
+      <div class="photo-upload-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFileSelect(this.files[0])" />
+        <svg class="photo-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="12" width="52" height="40" rx="3" stroke="#B8924A" stroke-width="2"/>
+          <circle cx="32" cy="32" r="10" stroke="#B8924A" stroke-width="2"/>
+          <circle cx="32" cy="32" r="4" fill="#B8924A" opacity="0.3"/>
+          <path d="M22 12l4-6h12l4 6" stroke="#B8924A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3>Choose a Photo</h3>
+        <p>Click to select from your device, or drag and drop here</p>
+        <span class="photo-link">📷   Select Photo</span>
+        <div id="selectedFileName" style="margin-top:16px;font-size:13px;color:var(--sage);display:none"></div>
+      </div>
+      <div class="upload-progress" id="uploadProgress"><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div><p style="font-size:13px;color:var(--muted);margin-top:8px" id="uploadStatus">Uploading…</p></div>
+      <button type="submit" class="submit-btn" id="photoBtn" style="margin-top:20px" disabled>Upload Photo  →</button>
+    </form>
+    <div class="success-msg" id="photoSuccess">Your photo has been added to Miriam's memorial gallery.</div>
+    <div id="photoGallery" class="photo-gallery"></div>
+  </div>
+
+  <div id="tab-rsvp" class="tab-panel">
+    <p class="section-body" style="margin-bottom:32px">We will be holding services to celebrate Miriam's life. Please let us know which you plan to attend.</p>
+    <div class="rsvp-cards">
+      <div class="rsvp-card" id="card-la" onclick="selectService('la')">
+        <div class="check" id="check-la"></div>
+        <div class="city">Los Angeles, CA</div>
+        <h3>Memorial Service</h3>
+        <div class="detail">Date: To be confirmed<br/>Location: To be confirmed<br/><em style="font-size:13px;color:var(--sage)">Watch for details from the family</em></div>
+      </div>
+      <div class="rsvp-card" id="card-atl" onclick="selectService('atl')">
+        <div class="check" id="check-atl"></div>
+        <div class="city">Lithia Springs, GA</div>
+        <h3>Graveside Service</h3>
+        <div class="detail">Date: To be confirmed<br/>Mozley Memorial Gardens<br/><em style="font-size:13px;color:var(--sage)">Laid to rest beside her husband</em></div>
+      </div>
+    </div>
+    <form id="rsvpForm">
+      <div class="form-grid">
+        <div class="form-group"><label>First Name</label><input type="text" id="rsvpFirst" placeholder="Your first name" required /></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="rsvpLast" placeholder="Your last name" /></div>
+        <div class="form-group"><label>Email</label><input type="email" id="rsvpEmail" placeholder="So we can send you updates" required /></div>
+        <div class="form-group"><label>Number of Guests</label>
+          <select id="guestCount"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option value="6">5+</option></select>
+        </div>
+        <div class="form-group full"><label>Anything you'd like the family to know? <span style="opacity:0.5;font-weight:300">(optional)</span></label><textarea id="rsvpNote" style="min-height:100px" placeholder="Dietary needs, traveling from out of town, etc."></textarea></div>
+      </div>
+      <input type="hidden" id="selectedService" value="" />
+      <button type="submit" class="submit-btn" id="rsvpBtn">Confirm My RSVP  →</button>
+    </form>
+    <div class="success-msg" id="rsvpSuccess">Thank you. We will send you details as soon as the date is confirmed.</div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<footer>
+  <p><span>Miriam Ngozi Tasker</span>  ·  May 3, 1956 – March 4, 2026  ·  Forever in our hearts</p>
+  <p style="margin-top:10px">Created with love by her family</p>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://mqgoyqvjgjvsixaowqub.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xZ295cXZqZ2p2c2l4YW93cXViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODYxNTEsImV4cCI6MjA4OTI2MjE1MX0.Jgyxg5fIgIXJL8xCTSMz8oxb4Mz-JxbRwSPoVEpTu4o';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'message') loadMessages();
+  if (name === 'photo') loadPhotos();
+}
+
+let selectedServiceVal = '';
+function selectService(id) {
+  document.querySelectorAll('.rsvp-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('card-' + id).classList.add('selected');
+  selectedServiceVal = id === 'la' ? 'Los Angeles Memorial' : 'Lithia Springs Graveside';
+  document.getElementById('selectedService').value = selectedServiceVal;
+}
+
+document.getElementById('messageForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('msgBtn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  const name = (document.getElementById('firstName').value.trim() + ' ' + document.getElementById('lastName').value.trim()).trim();
+  const { error } = await sb.from('memories').insert({
+    name: name,
+    message: document.getElementById('message').value,
+    show_on_page: document.getElementById('showOnPage').checked
+  });
+  if (error) { alert('Something went wrong: ' + error.message); btn.disabled = false; btn.textContent = 'Send My Message →'; return; }
+  this.style.display = 'none';
+  document.getElementById('msgSuccess').style.display = 'block';
+  loadMessages();
+});
+
+async function loadMessages() {
+  const list = document.getElementById('messagesList');
+  const { data, error } = await sb.from('memories').select('name,message,created_at').eq('show_on_page', true).order('created_at', { ascending: false }).limit(50);
+  if (error || !data || !data.length) { list.innerHTML = '<div class="loading-msgs">Be the first to leave a message.</div>'; return; }
+  list.innerHTML = data.map(m => '<div class="message-card"><p>' + esc(m.message) + '</p><div class="author">' + esc(m.name) + '  ·  ' + new Date(m.created_at).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) + '</div></div>').join('');
+}
+
+let selectedFile = null;
+function handleFileSelect(file) {
+  if (!file) return;
+  selectedFile = file;
+  const nameEl = document.getElementById('selectedFileName');
+  nameEl.style.display = 'block';
+  nameEl.textContent = '✓ ' + file.name;
+  document.getElementById('photoBtn').disabled = false;
+}
+
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files[0]) handleFileSelect(e.dataTransfer.files[0]); });
+
+document.getElementById('photoForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (!selectedFile) return;
+  const btn = document.getElementById('photoBtn');
+  btn.disabled = true; btn.textContent = 'Uploading…';
+  const progress = document.getElementById('uploadProgress');
+  progress.style.display = 'block';
+  const ext = selectedFile.name.split('.').pop();
+  const fileName = Date.now() + '_' + Math.random().toString(36).slice(2) + '.' + ext;
+  document.getElementById('progressFill').style.width = '40%';
+  const { error: uploadError } = await sb.storage.from('memorial-photos').upload(fileName, selectedFile, { cacheControl: '3600', upsert: false });
+  if (uploadError) { alert('Upload failed: ' + uploadError.message); btn.disabled = false; btn.textContent = 'Upload Photo →'; progress.style.display = 'none'; return; }
+  document.getElementById('progressFill').style.width = '80%';
+  const { data: { publicUrl } } = sb.storage.from('memorial-photos').getPublicUrl(fileName);
+  const name = document.getElementById('photoName').value;
+  const caption = document.getElementById('photoCaption').value;
+  await sb.from('memories').insert({ name: name, message: caption || 'Shared a photo', photo_url: publicUrl, show_on_page: true });
+  document.getElementById('progressFill').style.width = '100%';
+  setTimeout(function() { document.getElementById('photoForm').style.display = 'none'; document.getElementById('photoSuccess').style.display = 'block'; loadPhotos(); }, 400);
+});
+
+async function loadPhotos() {
+  const gallery = document.getElementById('photoGallery');
+  const { data, error } = await sb.from('memories').select('photo_url,name,message').not('photo_url', 'is', null).order('created_at', { ascending: false }).limit(30);
+  if (error || !data || !data.length) return;
+  gallery.innerHTML = data.map(p => '<img src="' + esc(p.photo_url) + '" alt="' + esc(p.name) + '" title="' + esc(p.message) + '" loading="lazy" />').join('');
+}
+
+document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('rsvpBtn');
+  btn.disabled = true; btn.textContent = 'Confirming…';
+  const name = (document.getElementById('rsvpFirst').value.trim() + ' ' + document.getElementById('rsvpLast').value.trim()).trim();
+  const guestVal = document.getElementById('guestCount').value;
+  const guestCount = isNaN(parseInt(guestVal)) ? 1 : parseInt(guestVal);
+  const { error } = await sb.from('rsvps').insert({
+    name: name,
+    email: document.getElementById('rsvpEmail').value,
+    attending: selectedServiceVal || 'Not specified',
+    guest_count: guestCount
+  });
+  if (error) { alert('Something went wrong: ' + error.message); btn.disabled = false; btn.textContent = 'Confirm My RSVP →'; return; }
+  this.style.display = 'none';
+  document.getElementById('rsvpSuccess').style.display = 'block';
+});
+
+function esc(s) { const d = document.createElement('div'); d.appendChild(document.createTextNode(s || '')); return d.innerHTML; }
+
+const obs = new IntersectionObserver(function(entries) { entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+
+loadMessages();
+loadPhotos();
+</script>
+</body>
+</html>
